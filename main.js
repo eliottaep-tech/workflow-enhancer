@@ -3,6 +3,10 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
+// Force the app name to "Transfer" so app.getPath('userData') resolves to
+// %APPDATA%\Transfer, matching the folder the After Effects script expects.
+app.setName('Transfer');
+
 const PORT = 7841;
 let win;
 let tray;
@@ -97,7 +101,9 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
-  QUEUE = path.join(app.getPath('userData'), 'Transfer', 'queue');
+  // QUEUE now resolves to %APPDATA%\Transfer\queue, matching
+  // Folder.userData.fsName + '/Transfer/queue' in Transfer.jsx
+  QUEUE = path.join(app.getPath('userData'), 'queue');
   fs.mkdirSync(QUEUE, { recursive: true });
 
   startBridge();
